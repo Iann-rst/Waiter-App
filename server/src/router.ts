@@ -1,48 +1,55 @@
+import path from 'node:path';
 import { Router } from 'express';
+import multer from 'multer';
+
+
+import { createCategories } from './app/useCases/categories/createCategories';
+import { listCategories } from './app/useCases/categories/listCategories';
+import { createProducts } from './app/useCases/products/createProducts';
+import { listProducts } from './app/useCases/products/listProducts';
+import { listProductsByCategories } from './app/useCases/categories/listProductsByCategories';
+import { listOrders } from './app/useCases/orders/listOrders';
+import { createOrders } from './app/useCases/orders/createOrders';
+import { changeOrderStatus } from './app/useCases/orders/changeOrderStatus';
+import { cancelOrder } from './app/useCases/orders/cancelOrder';
+
 
 export const router = Router();
 
-//List categories
-router.get('/categories', (req, res) => {
-  res.send('Listar Categorias');
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, callback) {
+      callback(null, path.resolve(__dirname, '..', 'uploads'));
+    },
+    filename(req, file, callback) {
+      callback(null, `${Date.now()}-${file.originalname}`);
+    }
+  })
 });
+
+//List categories
+router.get('/categories', listCategories);
 
 //Create Category
-router.post('/categories', (req, res) => {
-  res.send('Categoria criada!').status(201);
-});
+router.post('/categories', createCategories);
 
 //List Product
-router.get('/products', (req, res) => {
-  res.send('Listar Produtos');
-});
+router.get('/products', listProducts);
 
 //Create Product
-router.post('/products', (req, res) => {
-  res.send('Produto criado!').status(201);
-});
+router.post('/products', upload.single('image'), createProducts);
 
 //Get Products by category
-router.get('/categories/:categoryId/products', (req, res) => {
-  res.send('Produtos por categoria');
-});
+router.get('/categories/:categoryId/products', listProductsByCategories);
 
 //List orders
-router.get('/orders', (req, res) => {
-  res.send('Listar pedidos');
-});
+router.get('/orders', listOrders);
 
 //Create orders
-router.post('orders', (req, res) => {
-  res.send('Criar pedidos').status(201);
-});
+router.post('/orders', createOrders);
 
 //Change order status
-router.patch('/orders/:orderId', (req, res) => {
-  res.send('Trocar status do pedido');
-});
+router.patch('/orders/:orderId', changeOrderStatus);
 
 //Delete/Cancel order
-router.delete('/orders/:orderId', (req, res) => {
-  res.send('Deletar pedido');
-});
+router.delete('/orders/:orderId', cancelOrder);
