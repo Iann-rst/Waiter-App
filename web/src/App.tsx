@@ -1,6 +1,13 @@
+import Header from './components/Header';
+import { Order } from './components/Order';
+import './styles/main.css';
+
 function App() {
   return (
-    <h1>HOME PAGE</h1>
+    <>
+      <Header />
+      <Order />
+    </>
   );
 }
 
