@@ -1,5 +1,7 @@
+import { Button } from '../components/Button';
 import { Categories } from '../components/Categories';
 import { Header } from '../components/Header';
+import { Menu } from '../components/Menu/';
 
 import * as S from './styles';
 
@@ -13,14 +15,16 @@ export function Main() {
         </S.CategoriesContainer>
 
         <S.MenuContainer>
-
+          <Menu />
         </S.MenuContainer>
-
-
       </S.Container>
 
       <S.Footer>
-        <S.FooterContainer></S.FooterContainer>
+        <S.FooterContainer>
+          <Button onPress={() => alert('Novo Pedido')}>
+            Novo Pedido
+          </Button>
+        </S.FooterContainer>
       </S.Footer>
     </>
 
