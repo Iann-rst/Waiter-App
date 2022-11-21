@@ -1,3 +1,4 @@
+import { Categories } from '../components/Categories';
 import { Header } from '../components/Header';
 
 import * as S from './styles';
@@ -8,7 +9,7 @@ export function Main() {
       <S.Container>
         <Header />
         <S.CategoriesContainer>
-
+          <Categories />
         </S.CategoriesContainer>
 
         <S.MenuContainer>
