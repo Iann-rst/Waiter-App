@@ -28,7 +28,9 @@ export const Actions = styled.View`
   justify-content: space-between;
 `;
 
-export const ProductDetails = styled.View``;
+export const ProductDetails = styled.View`
+  margin-left: 4px;
+`;
 
 
 export const Summary = styled.View`
