@@ -11,8 +11,6 @@ import { Menu } from '../components/Menu/';
 import { TableModal } from '../components/TableModal';
 
 
-import { products } from '../mocks/products';
-
 import * as S from './styles';
 
 export function Main() {
@@ -28,6 +26,7 @@ export function Main() {
 
   function handleCancelOrder() {
     setSelectedTable('');
+    setCartItem([]);
   }
 
   //Adicionar item no carrinho
@@ -61,6 +60,31 @@ export function Main() {
     });
   }
 
+  //Decrementar o item do carrinho
+  function handleDecrementCartItem(product: Product) {
+    //setCartItem
+    setCartItem((prevState) => {
+      const itemIndex = prevState.findIndex(
+        cartItem => cartItem.product._id === product._id
+      );
+
+      const newCartItems = [...prevState];
+      const item = prevState[itemIndex];
+
+      if (item.quantity === 1) {
+        newCartItems.splice(itemIndex, 1);
+        return newCartItems;
+      }
+
+      newCartItems[itemIndex] = {
+        ...item,
+        quantity: item.quantity - 1,
+      };
+
+      return newCartItems;
+    });
+  }
+
   return (
     <>
       <S.Container>
@@ -83,7 +107,7 @@ export function Main() {
           )}
 
           {selectedTable && (
-            <Cart cartItems={cartItem} onAdd={handleAddToCart} />
+            <Cart cartItems={cartItem} onAdd={handleAddToCart} onDecrement={handleDecrementCartItem} />
           )}
         </S.FooterContainer>
       </S.Footer>
