@@ -21,6 +21,7 @@ export function TableModal({ visible, onClose, onSave }: TableModalProps) {
 
   function handleSave() {
     onSave(table);
+    setTable('');
     onClose();
   }
 
@@ -45,6 +46,7 @@ export function TableModal({ visible, onClose, onSave }: TableModalProps) {
               placeholderTextColor="#666"
               onChangeText={setTable}
               keyboardType='number-pad'
+              value={table}
             />
 
             <Button
