@@ -11,12 +11,18 @@ interface ProductDetailsModal {
   visible: boolean;
   onClose: () => void;
   product: null | Product;
+  onAddToCart: (product: Product) => void;
 }
 
-export function ProductDetailsModal({ visible, onClose, product }: ProductDetailsModal) {
+export function ProductDetailsModal({ visible, onClose, product, onAddToCart }: ProductDetailsModal) {
 
   if (!product) {
     return null;
+  }
+
+  function handleAddToCart(product: Product) {
+    onAddToCart(product);
+    onClose();
   }
 
   return (
@@ -65,7 +71,7 @@ export function ProductDetailsModal({ visible, onClose, product }: ProductDetail
             <Text weight='600' size={20}>{formatCurrency(product.price)}</Text>
           </S.PriceContainer>
 
-          <Button onPress={() => alert('Adicionar ao pedido')}>
+          <Button onPress={() => handleAddToCart(product)}>
             Adicionar ao pedido
           </Button>
         </S.FooterContainer>
