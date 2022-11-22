@@ -11,7 +11,7 @@ import { Header } from '../components/Header';
 import { Menu } from '../components/Menu/';
 import { TableModal } from '../components/TableModal';
 
-
+import { products as mockProducts } from '../mocks/products';
 
 import * as S from './styles';
 
@@ -21,6 +21,7 @@ export function Main() {
   const [isLoading, setIsLoading] = useState(false);
   const [cartItem, setCartItem] = useState<CartItemProps[]>([]);
 
+  const [products] = useState<Product[]>(mockProducts);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -101,7 +102,7 @@ export function Main() {
             </S.CategoriesContainer>
 
             <S.MenuContainer>
-              <Menu onAddToCart={handleAddToCart} />
+              <Menu onAddToCart={handleAddToCart} products={products} />
             </S.MenuContainer>
           </>
         )}
