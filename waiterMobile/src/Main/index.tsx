@@ -30,6 +30,8 @@ export function Main() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+
   function handleSaveTable(table: string) {
     setSelectedTable(table);
   }
@@ -99,11 +101,14 @@ export function Main() {
 
   //Buscar na api os produtos por categoria, caso não tenha categoryId busca todos os produtos do banco de dados
   async function handleSelectedCategory(categoryId: string) {
+    setIsLoadingProducts(true);
     const route = !categoryId ? '/products' : `/categories/${categoryId}/products`;
 
     try {
       const response = await api.get(route);
       setProducts(response.data);
+
+      setIsLoadingProducts(false);
     } catch (error) {
       console.log(error);
     }
@@ -133,15 +138,23 @@ export function Main() {
               <Categories categories={categories} onSelectCategory={handleSelectedCategory} />
             </S.CategoriesContainer>
 
-            {products.length > 0 ? (
-              <S.MenuContainer>
-                <Menu onAddToCart={handleAddToCart} products={products} />
-              </S.MenuContainer>
-            ) : (
+            {isLoadingProducts ? (
               <S.CenteredContainer>
-                <Empty />
-                <Text color="#666" style={{ marginTop: 24 }}>Nenhum produto foi encontrado!</Text>
+                <ActivityIndicator color="#D73035" size="large" />
               </S.CenteredContainer>
+            ) : (
+              <>
+                {products.length > 0 ? (
+                  <S.MenuContainer>
+                    <Menu onAddToCart={handleAddToCart} products={products} />
+                  </S.MenuContainer>
+                ) : (
+                  <S.CenteredContainer>
+                    <Empty />
+                    <Text color="#666" style={{ marginTop: 24 }}>Nenhum produto foi encontrado!</Text>
+                  </S.CenteredContainer>
+                )}
+              </>
             )}
           </>
         )}
