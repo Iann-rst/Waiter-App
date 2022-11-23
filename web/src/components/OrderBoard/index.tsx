@@ -5,6 +5,8 @@ import { OrderProps } from '../../@types/Order';
 import { api } from '../../utils/api';
 import { CreateModal } from '../CreateModal';
 
+import { toast } from 'react-toastify';
+
 interface OrderBoardProps {
   icon: string;
   title: string;
@@ -28,8 +30,7 @@ export function OrderBoard({ icon, title, orders, onCancelOrder }: OrderBoardPro
     setIsLoading(true);
     try {
       await api.delete(`/orders/${selectedOrderModal?._id}`);
-
-
+      toast.success(`O pedido da mesa ${selectedOrderModal?.table} foi cancelado!`);
       onCancelOrder(selectedOrderModal!._id);
       setIsLoading(false);
       setIsOpenModal(false);
