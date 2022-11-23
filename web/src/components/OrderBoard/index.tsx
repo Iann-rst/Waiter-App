@@ -12,9 +12,10 @@ interface OrderBoardProps {
   title: string;
   orders: OrderProps[];
   onCancelOrder: (orderId: string) => void;
+  onChangeOrder: (orderId: string, status: OrderProps['status']) => void;
 }
 
-export function OrderBoard({ icon, title, orders, onCancelOrder }: OrderBoardProps) {
+export function OrderBoard({ icon, title, orders, onCancelOrder, onChangeOrder }: OrderBoardProps) {
   const [selectedOrderModal, setSelectedOrderModal] = useState<null | OrderProps>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,6 +42,19 @@ export function OrderBoard({ icon, title, orders, onCancelOrder }: OrderBoardPro
     }
   }
 
+  //mudar o status do pedido
+  async function handleChangeOrderStatus() {
+    setIsLoading(true);
+    const status = selectedOrderModal?.status === 'WAITING' ? 'IN_PRODUCTION' : 'DONE';
+    api.patch(`/orders/${selectedOrderModal?._id}`, { status });
+
+    toast.success(`O pedido da mesa ${selectedOrderModal?.table} teve o status alterado!`);
+    onChangeOrder(selectedOrderModal!._id, status);
+
+    setIsLoading(false);
+    setIsOpenModal(false);
+  }
+
   return (
     <Dialog.Root open={isOpenModal}>
       <div className="p-4 border rounded-2xl flex flex-col items-center flex-1">
@@ -50,7 +64,13 @@ export function OrderBoard({ icon, title, orders, onCancelOrder }: OrderBoardPro
           <span>({orders.length})</span>
         </header>
 
-        <CreateModal order={selectedOrderModal} onDeleteOrder={handleDeleteOrder} isLoading={isLoading} onCloseModal={() => setIsOpenModal(false)} />
+        <CreateModal
+          order={selectedOrderModal}
+          onDeleteOrder={handleDeleteOrder}
+          isLoading={isLoading}
+          onCloseModal={() => setIsOpenModal(false)}
+          onChangeStatus={handleChangeOrderStatus}
+        />
 
 
         {orders.length > 0 && <div className="flex flex-col w-full mt-6">

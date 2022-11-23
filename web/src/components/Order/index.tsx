@@ -28,11 +28,37 @@ export function Order() {
     setOrders((prevState) => prevState.filter(order => order._id !== orderId));
   }
 
+  function handleStatusChange(orderId: string, status: OrderProps['status']) {
+    setOrders((prevState) => prevState.map((order) => (
+      order._id === orderId ? { ...order, status } : order
+    )));
+  }
+
   return (
     <main className="w-full max-w-[1216px] my-10 mx-auto flex gap-8">
-      <OrderBoard icon='🕑' title="Fila de espera" orders={waitingOrder} onCancelOrder={handleCancelOrder} />
-      <OrderBoard icon="👩‍🍳" title="Em produção" orders={inProductionOrder} onCancelOrder={handleCancelOrder} />
-      <OrderBoard icon="✅" title="Pronto!" orders={doneOrder} onCancelOrder={handleCancelOrder} />
+      <OrderBoard
+        icon='🕑'
+        title="Fila de espera"
+        orders={waitingOrder}
+        onCancelOrder={handleCancelOrder}
+        onChangeOrder={handleStatusChange}
+      />
+
+      <OrderBoard
+        icon="👩‍🍳"
+        title="Em produção"
+        orders={inProductionOrder}
+        onCancelOrder={handleCancelOrder}
+        onChangeOrder={handleStatusChange}
+      />
+
+      <OrderBoard
+        icon="✅"
+        title="Pronto!"
+        orders={doneOrder}
+        onCancelOrder={handleCancelOrder}
+        onChangeOrder={handleStatusChange}
+      />
     </main>
   );
 }

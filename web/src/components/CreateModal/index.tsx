@@ -8,9 +8,10 @@ interface OrderModalProps {
   onCloseModal: () => void;
   onDeleteOrder: () => Promise<void>;
   isLoading: boolean;
+  onChangeStatus: () => Promise<void>;
 }
 
-export function CreateModal({ order, onDeleteOrder, onCloseModal, isLoading }: OrderModalProps) {
+export function CreateModal({ order, onDeleteOrder, onCloseModal, isLoading, onChangeStatus }: OrderModalProps) {
 
   if (!order) {
     return null;
@@ -41,7 +42,7 @@ export function CreateModal({ order, onDeleteOrder, onCloseModal, isLoading }: O
             </span>
             <strong className="text-[#333]">
               {order.status === 'WAITING' && 'Fila de espera'}
-              {order.status === 'IN_PRODUCTION' && '👩Em produção'}
+              {order.status === 'IN_PRODUCTION' && 'Em produção'}
               {order.status === 'DONE' && 'Pronto!'}
             </strong>
           </div>
@@ -70,12 +71,30 @@ export function CreateModal({ order, onDeleteOrder, onCloseModal, isLoading }: O
         </div>
 
         <footer className='flex flex-col gap-4 mt-8'>
-          <button disabled={isLoading} className='flex items-center justify-center gap-2 bg-[#333] text-white py-3 rounded-[48px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
-            <span>👩‍🍳</span>
-            <span className="font-semibold text-base leading-none">Iniciar Produção</span>
-          </button>
+          {order.status !== 'DONE' && (
+            <button
+              disabled={isLoading}
+              className='flex items-center justify-center gap-2 bg-[#333] text-white py-3 rounded-[48px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+              onClick={onChangeStatus}
+            >
+              <span>
+                {order.status === 'WAITING' && '👩‍🍳'}
+                {order.status === 'IN_PRODUCTION' && '✅'}
 
-          <button disabled={isLoading} className='text-[#D73035] text-base leading-none font-semibold  py-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed' onClick={onDeleteOrder}>
+              </span>
+              <span className="font-semibold text-base leading-none">
+                {order.status === 'WAITING' && 'Iniciar Produção'}
+                {order.status === 'IN_PRODUCTION' && 'Concluir Pedido'}
+
+              </span>
+            </button>
+          )}
+
+          <button
+            disabled={isLoading}
+            className='text-[#D73035] text-base leading-none font-semibold  py-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+            onClick={onDeleteOrder}
+          >
             Cancelar Pedido
           </button>
         </footer>
