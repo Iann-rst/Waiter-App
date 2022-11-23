@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
+import axios from 'axios';
 
 import { CartItemProps } from '../@types/cartItem';
 import { Product } from '../@types/product';
+import { Category } from '../@types/category';
+
 
 import { Button } from '../components/Button';
 import { Cart } from '../components/Cart';
@@ -13,17 +16,19 @@ import { Menu } from '../components/Menu/';
 import { TableModal } from '../components/TableModal';
 import { Text } from '../components/Text';
 
-import { products as mockProducts } from '../mocks/products';
+
 
 import * as S from './styles';
+import { api } from '../utils/api';
 
 export function Main() {
   const [tableModalVisible, setTableModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [cartItem, setCartItem] = useState<CartItemProps[]>([]);
 
-  const [products] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -92,6 +97,19 @@ export function Main() {
   }
 
 
+  useEffect(() => {
+
+    //Assim que montar o componente, busca as categorias e produtos no banco de dados
+    Promise.all([
+      api.get('/categories'),
+      api.get('/products')
+    ]).then(([categoriesResponse, productsResponse]) => {
+      setCategories(categoriesResponse.data);
+      setProducts(productsResponse.data);
+      setIsLoading(false);
+    });
+  }, []);
+
   return (
     <>
       <S.Container>
@@ -100,7 +118,7 @@ export function Main() {
         {!isLoading && (
           <>
             <S.CategoriesContainer>
-              <Categories />
+              <Categories categories={categories} />
             </S.CategoriesContainer>
 
             {products.length > 0 ? (
