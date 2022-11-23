@@ -97,6 +97,18 @@ export function Main() {
   }
 
 
+  //Buscar na api os produtos por categoria, caso não tenha categoryId busca todos os produtos do banco de dados
+  async function handleSelectedCategory(categoryId: string) {
+    const route = !categoryId ? '/products' : `/categories/${categoryId}/products`;
+
+    try {
+      const response = await api.get(route);
+      setProducts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
 
     //Assim que montar o componente, busca as categorias e produtos no banco de dados
@@ -118,7 +130,7 @@ export function Main() {
         {!isLoading && (
           <>
             <S.CategoriesContainer>
-              <Categories categories={categories} />
+              <Categories categories={categories} onSelectCategory={handleSelectedCategory} />
             </S.CategoriesContainer>
 
             {products.length > 0 ? (
