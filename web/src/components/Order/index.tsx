@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import socketIo from 'socket.io-client';
+
 import { OrderProps } from '../../@types/Order';
 import { api } from '../../utils/api';
 import { OrderBoard } from '../OrderBoard';
@@ -6,12 +8,23 @@ import { OrderBoard } from '../OrderBoard';
 export function Order() {
   const [orders, setOrders] = useState<OrderProps[]>([]);
 
+  //useEffect para conexão WebSocket
+  useEffect(() => {
+    const socket = socketIo('http://localhost:3002', {
+      transports: ['websocket'],
+    });
+
+    socket.on('orders@new', (order) => {
+      setOrders(prevState => prevState.concat(order));
+    });
+  }, []);
 
   useEffect(() => {
     api.get('/orders').then(({ data }) => {
       setOrders(data);
     });
   }, []);
+
 
 
   const waitingOrder = orders.filter((order) => order.status === 'WAITING');
