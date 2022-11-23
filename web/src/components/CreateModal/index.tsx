@@ -5,9 +5,12 @@ import { formatCurrency } from '../../utils/formatCurrency';
 
 interface OrderModalProps {
   order: OrderProps | null;
+  onCloseModal: () => void;
+  onDeleteOrder: () => Promise<void>;
+  isLoading: boolean;
 }
 
-export function CreateModal({ order }: OrderModalProps) {
+export function CreateModal({ order, onDeleteOrder, onCloseModal, isLoading }: OrderModalProps) {
 
   if (!order) {
     return null;
@@ -23,7 +26,7 @@ export function CreateModal({ order }: OrderModalProps) {
       <Dialog.Content className="fixed p-8 rounded-lg bg-white w-[480px] top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
         <Dialog.Title className="flex justify-between items-center text-2xl font-semibold text-[#333]">
           Mesa {order.table}
-          <Dialog.Close>
+          <Dialog.Close onClick={onCloseModal}>
             <img src={closeModal} alt="" />
           </Dialog.Close>
         </Dialog.Title>
@@ -67,12 +70,12 @@ export function CreateModal({ order }: OrderModalProps) {
         </div>
 
         <footer className='flex flex-col gap-4 mt-8'>
-          <button className='flex items-center justify-center gap-2 bg-[#333] text-white py-3 rounded-[48px]'>
+          <button disabled={isLoading} className='flex items-center justify-center gap-2 bg-[#333] text-white py-3 rounded-[48px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
             <span>👩‍🍳</span>
             <span className="font-semibold text-base leading-none">Iniciar Produção</span>
           </button>
 
-          <button className='text-[#D73035] text-base leading-none font-semibold  py-1'>
+          <button disabled={isLoading} className='text-[#D73035] text-base leading-none font-semibold  py-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed' onClick={onDeleteOrder}>
             Cancelar Pedido
           </button>
         </footer>

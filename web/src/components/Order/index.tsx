@@ -24,11 +24,15 @@ export function Order() {
     order.status === 'DONE'
   );
 
+  function handleCancelOrder(orderId: string) {
+    setOrders((prevState) => prevState.filter(order => order._id !== orderId));
+  }
+
   return (
     <main className="w-full max-w-[1216px] my-10 mx-auto flex gap-8">
-      <OrderBoard icon='🕑' title="Fila de espera" orders={waitingOrder} />
-      <OrderBoard icon="👩‍🍳" title="Em produção" orders={inProductionOrder} />
-      <OrderBoard icon="✅" title="Pronto!" orders={doneOrder} />
+      <OrderBoard icon='🕑' title="Fila de espera" orders={waitingOrder} onCancelOrder={handleCancelOrder} />
+      <OrderBoard icon="👩‍🍳" title="Em produção" orders={inProductionOrder} onCancelOrder={handleCancelOrder} />
+      <OrderBoard icon="✅" title="Pronto!" orders={doneOrder} onCancelOrder={handleCancelOrder} />
     </main>
   );
 }
