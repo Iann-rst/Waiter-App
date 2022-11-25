@@ -23,3 +23,6 @@
 
 https://user-images.githubusercontent.com/48128325/203806080-5d78fc7f-1529-4044-84f8-e23e26fe6dc2.mp4
 
+## Layout do projeto no figma
+
+[Figma WaiterApp](https://www.figma.com/file/fgv8vkAWBD0IrakdAc847H/WAITERAPP-(Copy)?node-id=11%3A195&t=6Rqbj7VqxoT1fZOm-0)
